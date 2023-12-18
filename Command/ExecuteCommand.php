@@ -224,7 +224,7 @@ class ExecuteCommand extends Command
             $input->setInteractive(false);
         }
 
-        $command = $scheduledCommand->getCommand();
+        $commandName = $scheduledCommand->getCommand();
 
         // Execute command and get return code
         try {
@@ -232,9 +232,9 @@ class ExecuteCommand extends Command
                 '<info>Execute</info> : <comment>'.$scheduledCommand->getCommand()
                 .' '.$scheduledCommand->getArguments().'</comment>'
             );
-            $output->writeln("[$command] Before run");
+            $output->writeln("[$commandName] Before run");
             $result = $command->run($input, $output);
-            $output->writeln("[$command] After run");
+            $output->writeln("[$commandName] After run");
 
         } catch (\Exception $e) {
             $output->writeln('Catched an Exception');
@@ -243,7 +243,7 @@ class ExecuteCommand extends Command
             $output->writeln($e->getTraceAsString());
             $result = -1;
         }
-        $output->writeln("[$command] After try-catch");
+        $output->writeln("[$commandName] After try-catch");
 
         if (false === $this->em->isOpen()) {
             $output->writeln('<comment>Entity manager closed by the last command.</comment>');
@@ -255,7 +255,7 @@ class ExecuteCommand extends Command
         // PullRequest: Fix repeated jobs #181
         $scheduledCommand = $this->em->find(ScheduledCommand::class, $scheduledCommand);
 
-        $output->writeln("[$command] Before setLastReturnCode w/ $result");
+        $output->writeln("[$commandName] Before setLastReturnCode w/ $result");
 
         $scheduledCommand->setLastReturnCode($result);
         $scheduledCommand->setLocked(false);
@@ -263,7 +263,7 @@ class ExecuteCommand extends Command
         $this->em->persist($scheduledCommand);
         $this->em->flush();
 
-        $output->writeln("[$command] Flushed w/ $result");
+        $output->writeln("[$commandName] Flushed w/ $result");
 
 
         /*
