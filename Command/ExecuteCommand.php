@@ -224,29 +224,16 @@ class ExecuteCommand extends Command
             $input->setInteractive(false);
         }
 
-        // Use a StreamOutput or NullOutput to redirect write() and writeln() in a log file
-        if (false === $this->logPath || empty($scheduledCommand->getLogFile())) {
-            $logOutput = new NullOutput();
-        } else {
-            $logOutput = new StreamOutput(
-                fopen(
-                    $this->logPath.$scheduledCommand->getLogFile(),
-                    'a',
-                    false
-                ), $this->commandsVerbosity
-            );
-        }
-
         // Execute command and get return code
         try {
             $output->writeln(
                 '<info>Execute</info> : <comment>'.$scheduledCommand->getCommand()
                 .' '.$scheduledCommand->getArguments().'</comment>'
             );
-            $result = $command->run($input, $logOutput);
+            $result = $command->run($input, $output);
         } catch (\Exception $e) {
-            $logOutput->writeln($e->getMessage());
-            $logOutput->writeln($e->getTraceAsString());
+            $output->writeln($e->getMessage());
+            $output->writeln($e->getTraceAsString());
             $result = -1;
         }
 
