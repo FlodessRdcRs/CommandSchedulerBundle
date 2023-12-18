@@ -224,18 +224,26 @@ class ExecuteCommand extends Command
             $input->setInteractive(false);
         }
 
+        $command = $scheduledCommand->getCommand();
+
         // Execute command and get return code
         try {
             $output->writeln(
                 '<info>Execute</info> : <comment>'.$scheduledCommand->getCommand()
                 .' '.$scheduledCommand->getArguments().'</comment>'
             );
+            $output->writeln("[$command] Before run");
             $result = $command->run($input, $output);
+            $output->writeln("[$command] After run");
+
         } catch (\Exception $e) {
+            $output->writeln('Catched an Exception');
+
             $output->writeln($e->getMessage());
             $output->writeln($e->getTraceAsString());
             $result = -1;
         }
+        $output->writeln("[$command] After try-catch");
 
         if (false === $this->em->isOpen()) {
             $output->writeln('<comment>Entity manager closed by the last command.</comment>');
@@ -247,11 +255,16 @@ class ExecuteCommand extends Command
         // PullRequest: Fix repeated jobs #181
         $scheduledCommand = $this->em->find(ScheduledCommand::class, $scheduledCommand);
 
+        $output->writeln("[$command] Before setLastReturnCode w/ $result");
+
         $scheduledCommand->setLastReturnCode($result);
         $scheduledCommand->setLocked(false);
         $scheduledCommand->setExecuteImmediately(false);
         $this->em->persist($scheduledCommand);
         $this->em->flush();
+
+        $output->writeln("[$command] Flushed w/ $result");
+
 
         /*
          * This clear() is necessary to avoid conflict between commands and to be sure that none entity are managed
