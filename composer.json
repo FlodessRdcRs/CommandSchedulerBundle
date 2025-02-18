@@ -33,6 +33,7 @@
         "symfony/translation": "^6.4 || ^7.0",
         "symfony/finder": "^6.4 || ^7.0",
         "symfony/form": "^6.4 || ^7.0",
+        "symfony/http-client": "^6.4 || ^7.0",
         "symfony/validator": "^6.4 || ^7.0",
         "symfony/lock": "^6.4 || ^7.0",
         "symfony/dependency-injection": "^6.4 || ^7.0",
@@ -53,7 +54,6 @@
         "symfony/dom-crawler": "^6.4 || ^7.0",
         "symfony/dotenv": "^6.4 || ^7.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.0",
-        "symfony/http-client": "^6.4 || ^7.0",
         "symfony/notifier": "^6.4 || ^7.0",
         "symfony/maker-bundle": "^1.60",
         "symfony/var-dumper": "^6.4 || ^7.0"
